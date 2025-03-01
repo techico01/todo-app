@@ -1,14 +1,16 @@
-import Layout from '../components/Layout';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home() {
+    const router = useRouter();
+
+    useEffect(() => {
+        router.push('/todos');
+    }, [router]);
+
     return (
-        <Layout>
-            <div className="container mx-auto p-6">
-                <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">Welcome to TODO Calendar</h1>
-                <p className="text-lg text-gray-600 text-center max-w-2xl mx-auto">
-                    Manage your tasks and events efficiently with our intuitive TODO Calendar app. Stay organized and never miss a deadline!
-                </p>
-            </div>
-        </Layout>
+        <div className="flex justify-center items-center h-screen">
+            <p>Redirecting to todos...</p>
+        </div>
     );
 }

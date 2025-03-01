@@ -1,11 +1,9 @@
-const Footer = () => {
+import React from 'react';
+
+export default function Footer() {
     return (
-        <footer className="bg-gray-800 text-white py-6 mt-8">
-            <div className="container mx-auto text-center">
-                <p className="text-sm">&copy; 2025 TODO Calendar. All rights reserved.</p>
-            </div>
+        <footer className="py-4 text-center text-gray-600 dark:text-gray-400 text-sm">
+            <p>&copy; {new Date().getFullYear()} Todo App</p>
         </footer>
     );
-};
-
-export default Footer;
+}
