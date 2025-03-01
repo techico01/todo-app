@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
-import ja from 'date-fns/locale/ja';
+import { ja } from 'date-fns/locale/ja';
 import 'react-datepicker/dist/react-datepicker.css';
 
 // 日本語ロケールを登録

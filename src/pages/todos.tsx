@@ -2,8 +2,17 @@ import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import DateTimePicker from '../components/DateTimePicker';
 
+// Todo型の定義を追加
+interface Todo {
+    id: number;
+    title: string;
+    completed: boolean;
+    deadline: string | null;
+    createdAt: string;
+}
+
 export default function TodosPage() {
-    const [todos, setTodos] = useState([]);
+    const [todos, setTodos] = useState<Todo[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [title, setTitle] = useState('');

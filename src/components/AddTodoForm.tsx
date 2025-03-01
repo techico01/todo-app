@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
 
+// 配列の型を明示的に定義
+type CalendarDay = {
+    day: number;
+    currentMonth: boolean;
+    prevMonth?: boolean;
+    nextMonth?: boolean;
+};
+
 const AddTodoForm = ({ onAdd }) => {
     const [title, setTitle] = useState('');
     const [isExpanded, setIsExpanded] = useState(false);
@@ -61,7 +69,7 @@ const AddTodoForm = ({ onAdd }) => {
     };
 
     // カレンダー行を生成
-    const generateCalendarDays = () => {
+    const generateCalendarDays = (): CalendarDay[][] => {
         const daysInMonth = getDaysInMonth(displayYear, displayMonth);
         const firstDay = getFirstDayOfMonth(displayYear, displayMonth);
 
@@ -70,13 +78,13 @@ const AddTodoForm = ({ onAdd }) => {
             ? getDaysInMonth(displayYear - 1, 11)
             : getDaysInMonth(displayYear, displayMonth - 1);
 
-        const days = [];
+        const days: CalendarDay[][] = [];
         let dayCount = 1;
         let nextMonthDay = 1;
 
         // 週ごとに行を生成
         for (let i = 0; i < 6; i++) {
-            const week = [];
+            const week: CalendarDay[] = [];
 
             // 各日を追加
             for (let j = 0; j < 7; j++) {
@@ -156,36 +164,6 @@ const AddTodoForm = ({ onAdd }) => {
         console.log('Saving date and time:', selectedDate, selectedTime);
         setShowDatePicker(false);
     };
-
-    // デバッグ用の関数 (コンソールから呼び出せるように)
-    window.testAddTodo = async (testTitle, testDeadline) => {
-        try {
-            const response = await fetch('/api/todos', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    title: testTitle || 'テストタスク',
-                    completed: false,
-                    deadline: testDeadline || new Date('2025-04-01T12:00:00Z').toISOString()
-                })
-            });
-
-            const data = await response.json();
-            console.log('Test API Response:', data);
-            return data;
-        } catch (err) {
-            console.error('Test API Error:', err);
-            return null;
-        }
-    };
-
-    // グローバルウィンドウにデバッグ用関数を追加
-    if (typeof window !== 'undefined') {
-        // @ts-expect-error
-        window.testAddTodo = testAddTodo;
-    }
 
     return (
         <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg p-4 border-t border-gray-200 dark:border-gray-700 z-20">
