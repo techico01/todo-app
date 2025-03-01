@@ -4,7 +4,12 @@ module.exports = {
         './src/components/**/*.{js,ts,jsx,tsx}',
     ],
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                meiryo: ['"Meiryo UI"', '"Meiryo"', 'sans-serif'],
+            },
+        },
     },
     plugins: [],
+    darkMode: 'class',
 };

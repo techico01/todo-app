@@ -10,6 +10,16 @@ COPY package.json yarn.lock ./
 # Install dependencies
 RUN yarn install
 
+# Prismaクライアントを生成
+COPY prisma ./prisma
+RUN npx prisma generate
+
+# TypeScriptをコンパイル
+RUN yarn build
+
+# コンテナ起動時にPrismaマイグレーションを実行
+RUN npx prisma migrate deploy
+
 # Copy the rest of the application code
 COPY . .
 
