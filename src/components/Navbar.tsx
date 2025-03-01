@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+
 const Navbar = () => {
     return (
         <nav className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">

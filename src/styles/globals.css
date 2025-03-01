@@ -2,9 +2,4 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-    .dark {
-        background-color: #1a202c;
-        color: #e2e8f0;
-    }
-}
+/* その他のグローバルスタイル */

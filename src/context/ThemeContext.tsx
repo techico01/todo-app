@@ -1,12 +1,18 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
-const ThemeContext = createContext(null);
+// Context の型を定義
+type ThemeContextType = {
+    darkMode: boolean;
+    toggleDarkMode: () => void;
+};
 
-export const ThemeProvider = ({ children }) => {
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const [darkMode, setDarkMode] = useState(false);
 
     const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
+        setDarkMode((prev) => !prev);
         document.documentElement.classList.toggle('dark');
     };
 
@@ -17,4 +23,10 @@ export const ThemeProvider = ({ children }) => {
     );
 };
 
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = (): ThemeContextType => {
+    const context = useContext(ThemeContext);
+    if (!context) {
+        throw new Error('useTheme must be used within a ThemeProvider');
+    }
+    return context;
+};

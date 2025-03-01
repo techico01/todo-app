@@ -3,24 +3,36 @@ import Layout from '../components/Layout';
 import TodoList from '../components/TodoList';
 import AddTodoForm from '../components/AddTodoForm';
 
+// Todo の型を定義
+type Todo = {
+    id: number;
+    title: string;
+    completed: boolean;
+};
+
 export default function Todos() {
-    const [todos, setTodos] = useState([]);
+    // useState の初期値に型を明示
+    const [todos, setTodos] = useState<Todo[]>([]);
 
     useEffect(() => {
         fetch('/api/todos')
             .then((res) => res.json())
-            .then((data) => setTodos(data));
+            .then((data: Todo[]) => setTodos(data)); // 型アノテーションを追加
     }, []);
 
-    const handleToggle = (id) => {
-        // TODO: Toggle completion status
+    const handleToggle = (id: number) => {
+        setTodos((prevTodos) =>
+            prevTodos.map((todo) =>
+                todo.id === id ? { ...todo, completed: !todo.completed } : todo
+            )
+        );
     };
 
-    const handleDelete = (id) => {
-        // TODO: Delete todo
+    const handleDelete = (id: number) => {
+        setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
     };
 
-    const handleAdd = (title) => {
+    const handleAdd = (title: string) => {
         fetch('/api/todos', {
             method: 'POST',
             headers: {
@@ -29,14 +41,14 @@ export default function Todos() {
             body: JSON.stringify({ title, completed: false }),
         })
             .then((res) => res.json())
-            .then((newTodo) => {
-                setTodos([...todos, newTodo]);
+            .then((newTodo: Todo) => {
+                setTodos((prevTodos) => [...prevTodos, newTodo]);
             });
     };
 
     return (
         <Layout>
-            <div className="container mx-auto p-4 pb-20"> {/* pb-20でフォームの高さ分の余白を確保 */}
+            <div className="container mx-auto p-4 pb-20">
                 <h1 className="text-3xl font-bold mb-4">TODO List</h1>
                 <TodoList todos={todos} onToggle={handleToggle} onDelete={handleDelete} />
             </div>
