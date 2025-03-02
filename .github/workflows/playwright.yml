@@ -8,6 +8,19 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: mysql://root:root@localhost:3306/test_db
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -17,23 +30,29 @@ jobs:
       run: npm install
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+    
+    - name: Create .env file
+      run: echo "DATABASE_URL=$DATABASE_URL" > .env
+      
     - name: Generate Prisma client
       run: npx prisma generate
-    - name: Install wait-on utility
-      run: npm install -g wait-on
+      
+    - name: Setup database schema
+      run: npx prisma db push --force-reset
+      
     - name: Build Next.js application
       run: npm run build
-      env:
-        DATABASE_URL: mysql://fakeuser:fakepassword@localhost:3306/test_db
+      
     - name: Start Next.js server
-      run: npm run start & npx wait-on http://localhost:3000
-      env:
-        DATABASE_URL: mysql://fakeuser:fakepassword@localhost:3306/test_db
+      run: |
+        npm run start & 
+        sleep 10
+        curl --retry 5 --retry-delay 2 --retry-connrefused http://localhost:3000/ || true
       timeout-minutes: 2
+      
     - name: Run Playwright tests
       run: npx playwright test
-      env:
-        DATABASE_URL: mysql://fakeuser:fakepassword@localhost:3306/test_db
+      
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
