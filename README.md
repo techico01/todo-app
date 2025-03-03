@@ -12,5 +12,3 @@
 1. Dockerを使用して開発環境を構築します。
    ```bash
 docker-compose up -d
-
-docker-compose down -v
